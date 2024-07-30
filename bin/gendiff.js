@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { program } from 'commander';
-import parseFile from '../src/parse.js';
+import getDiff from '../src/index.js';
 
 program
   .name('gendiff')
@@ -9,11 +9,9 @@ program
   .arguments('<filepath1> <filepath2>')
   .option('-f, --format [type]', 'output format')
   .helpOption('-h, --help', 'output usage information')
-  .action((filepath1, filepath2) => {
-    const file1Data = parseFile(filepath1);
-    const file2Data = parseFile(filepath2);
-    console.log('File 1:', file1Data);
-    console.log('File 2:', file2Data);
+  .action((filePath1, filePath2) => {
+    const result = getDiff(filePath1, filePath2);
+    console.log(result);
   });
 
 program.parse(process.argv);
