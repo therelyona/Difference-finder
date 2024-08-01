@@ -3,6 +3,7 @@ import path from 'path';
 import { readFileSync } from 'fs';
 import getDiff from '../src/index.js';
 import getParse from '../src/parsers.js';
+import formatNode from '../src/utils/stylish.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,4 +33,13 @@ test('Unsupported file format', () => {
   const extension = path.extname(file);
 
   expect(() => getParse(content, extension)).toThrow();
+});
+
+test('Unknown node type', () => {
+  const invalidNode = [{
+    key: 'someKey',
+    type: 'unknownType',
+  }];
+
+  expect(() => formatNode(invalidNode, 1)).toThrow('Unknown node type: unknownType');
 });
