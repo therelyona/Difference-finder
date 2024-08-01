@@ -7,11 +7,11 @@ program
   .description('Compares two configuration files and shows a difference.')
   .version('1.0.0', '-V, --version', 'output the version number')
   .arguments('<filepath1> <filepath2>')
-  .option('-f, --format [type]', 'output format')
+  .option('-f, --format [type]', 'output format', 'stylish')
   .helpOption('-h, --help', 'output usage information')
   .action((filePath1, filePath2) => {
-    const result = getDiff(filePath1, filePath2);
-    console.log(result);
+    const options = program.opts().format;
+    console.log(getDiff(filePath1, filePath2, options));
   });
 
 program.parse(process.argv);
