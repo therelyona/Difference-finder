@@ -16,6 +16,9 @@ const findDifferences = (data1, data2) => {
     if (_.has(data1, key) && !_.has(data2, key)) {
       return { key, value: value1, type: 'deleted' };
     }
+    if (_.isObject(value1) && _.isObject(value2)) {
+      return { key, children: findDifferences(value1, value2), type: 'nested' };
+    }
     return {
       key, firstValue: value1, secondValue: value2, type: 'changed',
     };
