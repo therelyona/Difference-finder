@@ -3,9 +3,9 @@ import path from 'path';
 import makeAbsolutePath from './utils/path.js';
 import getParse from './parsers.js';
 import findDifferences from './differences.js';
-import formatDiff from './utils/stringify.js';
+import formatDiff from './utils/stylish.js';
 
-const getDiff = (filePath1, filePath2) => {
+const getDiff = (filePath1, filePath2, format = 'stylish') => {
   const path1 = makeAbsolutePath(filePath1);
   const path2 = makeAbsolutePath(filePath2);
 
