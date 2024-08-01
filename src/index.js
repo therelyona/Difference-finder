@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import path from 'path';
 import makeAbsolutePath from './utils/path.js';
-import getParse from './parse.js';
+import getParse from './parsers.js';
 import findDifferences from './differences.js';
 import formatDiff from './utils/stringify.js';
 
