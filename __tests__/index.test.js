@@ -3,7 +3,7 @@ import path from 'path';
 import { readFileSync } from 'fs';
 import getDiff from '../src/index.js';
 import getParse from '../src/parsers.js';
-import formatNode from '../src/utils/stylish.js';
+import formatNode from '../src/formatters/stylish.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,7 +16,7 @@ test('getDiff with JSON files', () => {
   const file2 = getFixturePath('file2.json');
   const expectedOutput = readFixtureFile('result.txt');
 
-  expect(getDiff(file1, file2)).toBe(expectedOutput);
+  expect(getDiff(file1, file2)).toEqual(expectedOutput);
 });
 
 test('getDiff with YML files', () => {
@@ -24,7 +24,15 @@ test('getDiff with YML files', () => {
   const file2 = getFixturePath('file2.yml');
   const expectedOutput = readFixtureFile('result.txt');
 
-  expect(getDiff(file1, file2)).toBe(expectedOutput);
+  expect(getDiff(file1, file2)).toEqual(expectedOutput);
+});
+
+test('getDiff with JSON, format - plain', () => {
+  const file1 = getFixturePath('file1.json');
+  const file2 = getFixturePath('file2.json');
+  const expectedOutput = readFixtureFile('resultPlain.txt');
+
+  expect(getDiff(file1, file2, 'plain')).toEqual(expectedOutput);
 });
 
 test('Unsupported file format', () => {
