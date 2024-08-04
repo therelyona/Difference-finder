@@ -27,7 +27,7 @@ test('getDiff with YML files', () => {
   expect(getDiff(file1, file2)).toEqual(expectedOutput);
 });
 
-test('getDiff with YML files', () => {
+test('getDiff with YAML files', () => {
   const file1 = getFixturePath('file1.yaml');
   const file2 = getFixturePath('file2.yaml');
   const expectedOutput = readFixtureFile('resultStylish.txt');
