@@ -4,6 +4,7 @@ import { readFileSync } from 'fs';
 import getDiff from '../src/index.js';
 import getParse from '../src/parsers.js';
 import formatNode from '../src/formatters/stylish.js';
+import plainFormatDiff from '../src/formatters/plain.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,36 +12,17 @@ const __dirname = path.dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 const readFixtureFile = (filename) => readFileSync(getFixturePath(filename), 'utf-8').trim();
 
-test('getDiff with JSON files', () => {
-  const file1 = getFixturePath('file1.json');
-  const file2 = getFixturePath('file2.json');
-  const expectedOutput = readFixtureFile('resultStylish.txt');
+test.each([
+  ['file1.json', 'file2.json', 'resultStylish.txt', undefined],
+  ['file1.yml', 'file2.yml', 'resultStylish.txt', undefined],
+  ['file1.json', 'file2.json', 'resultPlain.txt', 'plain'],
+  ['file1.json', 'file2.json', 'resultJson.txt', 'json'],
+])('getDiff with %s and %s, format - %s', (file1, file2, resultFile, format) => {
+  const filePath1 = getFixturePath(file1);
+  const filePath2 = getFixturePath(file2);
+  const expectedOutput = readFixtureFile(resultFile);
 
-  expect(getDiff(file1, file2)).toEqual(expectedOutput);
-});
-
-test('getDiff with YML files', () => {
-  const file1 = getFixturePath('file1.yml');
-  const file2 = getFixturePath('file2.yml');
-  const expectedOutput = readFixtureFile('resultStylish.txt');
-
-  expect(getDiff(file1, file2)).toEqual(expectedOutput);
-});
-
-test('getDiff with YAML files', () => {
-  const file1 = getFixturePath('file1.yaml');
-  const file2 = getFixturePath('file2.yaml');
-  const expectedOutput = readFixtureFile('resultStylish.txt');
-
-  expect(getDiff(file1, file2)).toEqual(expectedOutput);
-});
-
-test('getDiff with JSON, format - plain', () => {
-  const file1 = getFixturePath('file1.json');
-  const file2 = getFixturePath('file2.json');
-  const expectedOutput = readFixtureFile('resultPlain.txt');
-
-  expect(getDiff(file1, file2, 'plain')).toEqual(expectedOutput);
+  expect(getDiff(filePath1, filePath2, format)).toEqual(expectedOutput);
 });
 
 test('Unsupported file format', () => {
@@ -51,7 +33,7 @@ test('Unsupported file format', () => {
   expect(() => getParse(content, extension)).toThrow();
 });
 
-test('Unknown node type', () => {
+test('Unknown node type, stylish format', () => {
   const invalidNode = [{
     key: 'someKey',
     type: 'unknownType',
@@ -60,10 +42,11 @@ test('Unknown node type', () => {
   expect(() => formatNode(invalidNode, 1)).toThrow('Unknown node type: unknownType');
 });
 
-test('getDiff with JSON, format - json', () => {
-  const file1 = getFixturePath('file1.json');
-  const file2 = getFixturePath('file2.json');
-  const expectedOutput = readFixtureFile('resultJson.txt');
+test('Unknown node type, plain format', () => {
+  const invalidNode = [{
+    key: 'someKey',
+    type: 'unknownType',
+  }];
 
-  expect(getDiff(file1, file2, 'json')).toEqual(expectedOutput);
+  expect(() => plainFormatDiff(invalidNode, 1)).toThrow('Unknown node type: unknownType');
 });
