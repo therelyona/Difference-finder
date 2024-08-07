@@ -27,27 +27,26 @@ const stringify = (value, depth) => {
 };
 
 const formatNode = (node, depth) => {
-  const {
-    key, value, firstValue, secondValue, type, children,
-  } = node;
-  const hasChildren = children ? children.map((child) => formatNode(child, depth + 1)).join('\n') : '';
+  const { key, type } = node;
   const nodeIndent = indent(depth);
   const lineIndent = indent(depth, reducedIndentSize);
 
   switch (type) {
-    case 'nested':
-      return `${nodeIndent}${key}: {\n${hasChildren}\n${nodeIndent}}`;
+    case 'deleted':
+      return `${lineIndent}- ${key}: ${stringify(node.value, depth)}`;
+    case 'added':
+      return `${lineIndent}+ ${key}: ${stringify(node.value, depth)}`;
     case 'unchanged':
-      return `${nodeIndent}${key}: ${stringify(value, depth)}`;
+      return `${nodeIndent}${key}: ${stringify(node.value, depth)}`;
+    case 'nested': {
+      const children = node.children.map((child) => formatNode(child, depth + 1)).join('\n');
+      return `${nodeIndent}${key}: {\n${children}\n${nodeIndent}}`;
+    }
     case 'changed':
       return [
-        `${lineIndent}- ${key}: ${stringify(firstValue, depth)}`,
-        `${lineIndent}+ ${key}: ${stringify(secondValue, depth)}`,
+        `${lineIndent}- ${key}: ${stringify(node.value1, depth)}`,
+        `${lineIndent}+ ${key}: ${stringify(node.value2, depth)}`,
       ].join('\n');
-    case 'deleted':
-      return `${lineIndent}- ${key}: ${stringify(value, depth)}`;
-    case 'added':
-      return `${lineIndent}+ ${key}: ${stringify(value, depth)}`;
     default:
       throw new Error(`Unknown node type: ${type}`);
   }
