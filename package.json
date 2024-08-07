@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/therelyona/frontend-project-46/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/therelyona/frontend-project-46/actions)",
+  "description": "Difference Finder - a program that defines the difference between two data structures.",
   "bin": {
     "gendiff": "bin/gendiff.js"
   },
