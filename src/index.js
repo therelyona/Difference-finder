@@ -12,8 +12,8 @@ const getDiff = (filePath1, filePath2, formatName = 'stylish') => {
   const content1 = readFileSync(path1, 'utf-8');
   const content2 = readFileSync(path2, 'utf-8');
 
-  const extension1 = path.extname(path1);
-  const extension2 = path.extname(path2);
+  const extension1 = path.extname(path1).slice(1);
+  const extension2 = path.extname(path2).slice(1);
 
   const parsed1 = getParse(content1, extension1);
   const parsed2 = getParse(content2, extension2);
